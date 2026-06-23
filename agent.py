@@ -1,60 +1,84 @@
-from langchain_community.utilities import SearxSearchWrapper
+import httpx
 from langchain_core.tools import tool
 from langchain_ollama import ChatOllama
-from langchain.agents import create_agent
+from langgraph.prebuilt import create_react_agent  # más estable que create_agent ahora mismo
 
-searx_host = "http://localhost:8888"
-searx_wrapper = SearxSearchWrapper(searx_host=searx_host)
+SEARXNG_HOST = "http://localhost:8888"
 
-# 2. Definir la herramienta de búsqueda académica
 @tool
 def academic_search(query: str) -> str:
-    """Use this tool to search for peer-reviewed scientific papers, 
-    academic literature, and technical research regarding computer science, 
-    sensor fusion, and human activity recognition."""
-    # Forzamos la categoría 'science' para que SearXNG use arXiv, PubMed, etc.
-    return searx_wrapper.run(query, categories=["science"])
+    """Search for peer-reviewed scientific papers and academic literature
+    on computer science, sensor fusion, and human activity recognition."""
+    try:
+        response = httpx.get(
+            f"{SEARXNG_HOST}/search",
+            params={
+                "q": query,
+                "format": "json",
+                "categories": "science",
+                "language": "en",
+            },
+            timeout=15.0,
+            headers={"Accept": "application/json"},
+        )
+        response.raise_for_status()
+        data = response.json()
+    except Exception as e:
+        return f"Search error: {e}"
 
-tools = [academic_search]
+    results = data.get("results", [])[:4]  # limitar a 4 para no saturar el contexto
+    if not results:
+        return "No results found."
 
-# 3. Inicializar el LLM Local con Ollama
-# Usamos qwen2.5 de 14b o llama3, configurando la temperatura a 0 para mayor precisión
+    return "\n\n---\n\n".join(
+        f"Title: {r.get('title', 'No title')}\n"
+        f"URL: {r.get('url', '')}\n"
+        f"Summary: {r.get('content', 'No snippet available')[:300]}"  # truncar snippets
+        for r in results
+    )
+
+
+# qwen2.5:7b es mucho mejor en tool calling que llama3.1:8b
 llm = ChatOllama(
-    #model="qwen2.5:14b",
-    model="hf.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF:latest",
+    model="qwen2.5:7b",   # <- cambio clave
     temperature=0,
-    streaming=True
+    # SIN format="json"
 )
 
-# 4. Instrucciones del Sistema para el Agente Local
-promt = (
-    "You are an advanced academic research assistant. Your task is to analyze scientific topics "
-    "by pulling state-of-the-art literature from your academic search tool. "
-    "Always synthesize your findings and cite insights using the data retrieved."
+agent = create_react_agent(
+    model=llm,
+    tools=[academic_search],
+    prompt=(
+        "You are an academic research assistant. "
+        "Use the academic_search tool to find papers, then write a clear summary of what you found. "
+        "After receiving tool results, ALWAYS write a final text response summarizing the findings."
+    ),
 )
 
-# 5. Crear el Agente ReAct Autónomo con LangGraph
-agent = create_agent(
-    model=llm, 
-    tools=tools, 
-    system_prompt=promt
-)
-
-# 6. Ejecutar la consulta de investigación en local
 query_task = (
     "Search for recent papers on Multimodal Human Activity Recognition using sensor fusion. "
     "Summarize the main classification strategies being used."
 )
 
-print("--- Iniciando Ejecución con la API moderna `create_agent` ---")
+print("--- Lanzando agente ---")
 
-# En LangChain v1.0, invocamos al agente enviando la lista de mensajes estructurada
-response = agent.invoke({
-    "messages": [
-        {"role": "user", "content": query_task}
-    ]
-})
+for step in agent.stream(
+    {"messages": [{"role": "user", "content": query_task}]},
+    stream_mode="updates"
+):
+    node = list(step.keys())[0]
+    msgs = step[node].get("messages", [])
+    for msg in msgs:
+        msg_type = type(msg).__name__
+        if hasattr(msg, "tool_calls") and msg.tool_calls:
+            print(f"\n[{node}] {msg_type} → tool_call: {msg.tool_calls[0]['name']}({msg.tool_calls[0]['args']})")
+        elif msg_type == "ToolMessage":
+            print(f"[{node}] {msg_type} → tool executed ✓")
+        elif msg_type == "AIMessage" and msg.content:
+            # Solo imprimimos preview si NO es el mensaje final
+            # El mensaje final lo guardamos completo
+            final_content = msg.content
+            print(f"[{node}] {msg_type} → synthesizing...")
 
-print("\n--- Respuesta Final del Agente ---")
-# El resultado final se almacena en el último bloque de mensaje retornado por el grafo
-print(response["messages"][-1].content)
+print("\n--- Respuesta Final ---")
+print(final_content)

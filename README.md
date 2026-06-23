@@ -73,7 +73,8 @@ $ docker run --name searxng -d \
 curl "http://localhost:8888/search?q=test&format=json"
 ```
 
-## Test searxng
+## Executing searxng as native
+```shell
 $ python main.py 
 
 /home/miguel/git/poc-searxng/main.py:1: DeprecationWarning: `langchain-community` is being sunset and is no longer actively maintained. See https://github.com/langchain-ai/langchain-community/issues/674 for details and migration guidance toward standalone integration packages.
@@ -107,6 +108,31 @@ Title: Distilled mid-fusion transformer networks for multi-modal human activity 
 Link:  https://www.sciencedirect.com/science/article/pii/S0950705125012018
 Engines Used: ['google scholar']
 Snippet: … various sensors, Multi-modal Human Activity Recognition can … , their potential in extracting salient multi-modal spatial-temporal … Additionally, reducing the complexity of the multi-modal …
+```
+
+## Executing searxng as agent
+
+```shell
+python agent.py 
+/home/miguel/git/poc-searxng/agent.py:48: LangGraphDeprecatedSinceV10: create_react_agent has been moved to `langchain.agents`. Please update your import to `from langchain.agents import create_agent`. Deprecated in LangGraph V1.0 to be removed in V2.0.
+  agent = create_react_agent(
+--- Lanzando agente ---
+
+[agent] AIMessage → tool_call: academic_search({'query': 'Multimodal Human Activity Recognition sensor fusion recent'})
+[tools] ToolMessage → tool executed ✓
+[agent] AIMessage → synthesizing...
+
+--- Respuesta Final ---
+Based on the recent papers found, several key classification strategies are being used in Multimodal Human Activity Recognition (HAR) with sensor fusion:
+
+1. **Contrastive Fusion Learning**: The paper "Cosmo: contrastive fusion learning with small data for multimodal human activity recognition" introduces a new system that focuses on contrastive fusion learning specifically tailored to handle limited datasets, making it particularly useful in scenarios where large amounts of labeled data are not available.
+
+2. **Deep Feature Fusion**: In the study "Deep Feature Fusion-Based Human Activity Recognition from Multimodal Sensor Data," researchers utilize deep learning techniques to fuse features extracted from different sensor modalities (e.g., depth and inertial sensors) for improved activity recognition accuracy. This approach leverages advanced machine learning models to process complex multimodal data effectively.
+
+3. **Sensor-Driven Deep Learning**: The paper "Sensor-Driven Deep Learning for Smart Home Intelligence: Signal Analysis, Multimodal Perception, and System-Level Applications" discusses the integration of various sensor types in smart home environments. It highlights how deep learning can be applied to process heterogeneous sensor data, enabling more sophisticated multimodal perception systems.
+
+These strategies collectively aim to enhance the accuracy and robustness of human activity recognition by effectively combining data from multiple sensors, thereby addressing challenges such as noise, variability, and context-specific activities.
+```
 
 ## Some links
 
