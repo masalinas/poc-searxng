@@ -114,7 +114,7 @@ Snippet: … various sensors, Multi-modal Human Activity Recognition can … , t
 
 ```shell
 python agent.py 
-/home/miguel/git/poc-searxng/agent.py:48: LangGraphDeprecatedSinceV10: create_react_agent has been moved to `langchain.agents`. Please update your import to `from langchain.agents import create_agent`. Deprecated in LangGraph V1.0 to be removed in V2.0.
+/home/miguel/git/poc-searxng/agent.py:61: LangGraphDeprecatedSinceV10: create_react_agent has been moved to `langchain.agents`. Please update your import to `from langchain.agents import create_agent`. Deprecated in LangGraph V1.0 to be removed in V2.0.
   agent = create_react_agent(
 --- Lanzando agente ---
 
@@ -123,15 +123,41 @@ python agent.py
 [agent] AIMessage → synthesizing...
 
 --- Respuesta Final ---
-Based on the recent papers found, several key classification strategies are being used in Multimodal Human Activity Recognition (HAR) with sensor fusion:
+### Summary of Recent Papers on Multimodal Human Activity Recognition Using Sensor Fusion
 
-1. **Contrastive Fusion Learning**: The paper "Cosmo: contrastive fusion learning with small data for multimodal human activity recognition" introduces a new system that focuses on contrastive fusion learning specifically tailored to handle limited datasets, making it particularly useful in scenarios where large amounts of labeled data are not available.
+1. **A Survey on Multimodal Wearable Sensor-based Human Action Recognition**
+   - **Link:** [arXiv](http://arxiv.org/abs/2404.15349v1)
+   - **Main Points:**
+     - Discusses the potential of wearable sensor-based human activity recognition (WSHAR) in supporting older individuals.
+     - Highlights the use of multimodal data fusion for enhancing the accuracy and reliability of activity recognition systems.
 
-2. **Deep Feature Fusion**: In the study "Deep Feature Fusion-Based Human Activity Recognition from Multimodal Sensor Data," researchers utilize deep learning techniques to fuse features extracted from different sensor modalities (e.g., depth and inertial sensors) for improved activity recognition accuracy. This approach leverages advanced machine learning models to process complex multimodal data effectively.
+2. **Sensor-Driven Deep Learning for Smart Home Intelligence: Signal Analysis, Multimodal Perception, and System-Level Applications**
+   - **Link:** [PubMed](https://www.ncbi.nlm.nih.gov/pubmed/42197801)
+   - **Main Points:**
+     - Focuses on the integration of sensor data in smart home environments.
+     - Emphasizes the importance of signal analysis, multimodal perception, and system-level applications for processing large volumes of heterogeneous sensor data.
 
-3. **Sensor-Driven Deep Learning**: The paper "Sensor-Driven Deep Learning for Smart Home Intelligence: Signal Analysis, Multimodal Perception, and System-Level Applications" discusses the integration of various sensor types in smart home environments. It highlights how deep learning can be applied to process heterogeneous sensor data, enabling more sophisticated multimodal perception systems.
+3. **Cosmo: Contrastive Fusion Learning with Small Data for Multimodal Human Activity Recognition**
+   - **Link:** [ACM Digital Library](https://dl.acm.org/doi/abs/10.1145/3495243.3560519)
+   - **Main Points:**
+     - Introduces Cosmo, a system for contrastive fusion learning with small data.
+     - Suggests that this approach can be applied to multimodal human activity recognition tasks.
 
-These strategies collectively aim to enhance the accuracy and robustness of human activity recognition by effectively combining data from multiple sensors, thereby addressing challenges such as noise, variability, and context-specific activities.
+4. **Deep Feature Fusion-Based Human Activity Recognition from Multimodal Sensor Data**
+   - **Link:** [IEEE Xplore](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11291292)
+   - **Main Points:**
+     - Presents a multimodal human activity recognition system using the UTD-MHAD dataset.
+     - Incorporates depth and inertial data to improve recognition accuracy.
+
+### Main Classification Strategies
+
+The papers highlight several key strategies in classification for multimodal human activity recognition:
+
+1. **Multimodal Data Fusion**: This involves combining data from multiple sensors (e.g., wearable devices, cameras) to enhance the robustness and accuracy of activity recognition.
+2. **Contrastive Learning**: Techniques like Cosmo leverage contrastive learning methods to improve performance with limited data by focusing on distinguishing between different classes.
+3. **Deep Feature Fusion**: This approach uses deep learning models to fuse features from multiple modalities, such as depth and inertial sensors, to achieve better recognition accuracy.
+
+These strategies collectively aim to address the challenges of multimodal human activity recognition in various applications, including healthcare, smart surveillance, and human-computer interaction.
 ```
 
 ## Some links

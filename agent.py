@@ -26,21 +26,34 @@ def academic_search(query: str) -> str:
     except Exception as e:
         return f"Search error: {e}"
 
-    results = data.get("results", [])[:4]  # limitar a 4 para no saturar el contexto
+    results = data.get("results", [])[:4]
     if not results:
         return "No results found."
 
-    return "\n\n---\n\n".join(
-        f"Title: {r.get('title', 'No title')}\n"
-        f"URL: {r.get('url', '')}\n"
-        f"Summary: {r.get('content', 'No snippet available')[:300]}"  # truncar snippets
-        for r in results
-    )
+    formatted = []
+    for r in results:
+        engines      = ", ".join(r.get("engines", [])) or "unknown"
+        published    = r.get("publishedDate") or "unknown"
+        score        = r.get("score")
+        score_str    = f"{score:.3f}" if score is not None else "n/a"
+        category     = r.get("category") or "n/a"
 
+        entry = (
+            f"Title:     {r.get('title', 'No title')}\n"
+            f"Link:      {r.get('url', 'No URL')}\n"
+            f"Engines:   {engines}\n"
+            f"Published: {published}\n"
+            f"Score:     {score_str}\n"
+            f"Category:  {category}\n"
+            f"Snippet:   {r.get('content', 'No snippet')[:300]}"
+        )
+        formatted.append(entry)
+
+    return "\n\n---\n\n".join(formatted)
 
 # qwen2.5:7b es mucho mejor en tool calling que llama3.1:8b
 llm = ChatOllama(
-    model="qwen2.5:7b",   # <- cambio clave
+    model="qwen2.5:7b",
     temperature=0,
     # SIN format="json"
 )
@@ -50,8 +63,9 @@ agent = create_react_agent(
     tools=[academic_search],
     prompt=(
         "You are an academic research assistant. "
-        "Use the academic_search tool to find papers, then write a clear summary of what you found. "
-        "After receiving tool results, ALWAYS write a final text response summarizing the findings."
+        "Use the academic_search tool to find papers, then write a clear summary. "
+        "For each paper mentioned, always include its title, link, and the search engines that found it. "
+        "After receiving tool results, ALWAYS write a final text response."
     ),
 )
 
@@ -75,8 +89,7 @@ for step in agent.stream(
         elif msg_type == "ToolMessage":
             print(f"[{node}] {msg_type} → tool executed ✓")
         elif msg_type == "AIMessage" and msg.content:
-            # Solo imprimimos preview si NO es el mensaje final
-            # El mensaje final lo guardamos completo
+            # Solo imprimimos preview si NO es el mensaje final. El mensaje final lo guardamos completo
             final_content = msg.content
             print(f"[{node}] {msg_type} → synthesizing...")
 
