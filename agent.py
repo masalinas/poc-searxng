@@ -7,8 +7,10 @@ SEARXNG_HOST = "http://localhost:8888"
 
 @tool
 def academic_search(query: str) -> str:
-    """Search for peer-reviewed scientific papers and academic literature
-    on computer science, sensor fusion, and human activity recognition."""
+    """Search for academic papers and scientific literature using SearxNG.
+    Use this tool whenever you need to find peer-reviewed research, 
+    technical papers, or scientific publications on any topic.
+    Returns titles, links, engines, publication dates, scores and snippets."""
     try:
         response = httpx.get(
             f"{SEARXNG_HOST}/search",
