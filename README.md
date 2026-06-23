@@ -114,50 +114,46 @@ Snippet: … various sensors, Multi-modal Human Activity Recognition can … , t
 
 ```shell
 python agent.py 
-/home/miguel/git/poc-searxng/agent.py:61: LangGraphDeprecatedSinceV10: create_react_agent has been moved to `langchain.agents`. Please update your import to `from langchain.agents import create_agent`. Deprecated in LangGraph V1.0 to be removed in V2.0.
+/home/miguel/git/poc-searxng/agent.py:63: LangGraphDeprecatedSinceV10: create_react_agent has been moved to `langchain.agents`. Please update your import to `from langchain.agents import create_agent`. Deprecated in LangGraph V1.0 to be removed in V2.0.
   agent = create_react_agent(
 --- Lanzando agente ---
 
-[agent] AIMessage → tool_call: academic_search({'query': 'Multimodal Human Activity Recognition sensor fusion recent'})
+[agent] AIMessage → tool_call: academic_search({'query': 'Multimodal Human Activity Recognition sensor fusion'})
 [tools] ToolMessage → tool executed ✓
 [agent] AIMessage → synthesizing...
 
 --- Respuesta Final ---
-### Summary of Recent Papers on Multimodal Human Activity Recognition Using Sensor Fusion
+Based on the search results, here are summaries of recent papers focusing on Multimodal Human Activity Recognition using sensor fusion:
 
 1. **A Survey on Multimodal Wearable Sensor-based Human Action Recognition**
    - **Link:** [arXiv](http://arxiv.org/abs/2404.15349v1)
-   - **Main Points:**
-     - Discusses the potential of wearable sensor-based human activity recognition (WSHAR) in supporting older individuals.
-     - Highlights the use of multimodal data fusion for enhancing the accuracy and reliability of activity recognition systems.
+   - This paper provides a comprehensive survey of wearable sensor-based human activity recognition (WSHAR), particularly focusing on multimodal approaches. It highlights the importance of WSHAR in supporting the daily lives of older individuals, especially with an aging population.
 
-2. **Sensor-Driven Deep Learning for Smart Home Intelligence: Signal Analysis, Multimodal Perception, and System-Level Applications**
-   - **Link:** [PubMed](https://www.ncbi.nlm.nih.gov/pubmed/42197801)
-   - **Main Points:**
-     - Focuses on the integration of sensor data in smart home environments.
-     - Emphasizes the importance of signal analysis, multimodal perception, and system-level applications for processing large volumes of heterogeneous sensor data.
+2. **Optimizing Sensor and Data Selection on Lower Limbs via Deep Learning for Real-Time Human Activity Recognition**
+   - **Link:** [PubMed](https://www.ncbi.nlm.nih.gov/pubmed/42238992)
+   - This study focuses on optimizing sensor selection and data modalities for real-time human activity recognition (HAR) in lower limb exoskeletons. The key idea is to systematically evaluate different combinations of sensors and data to achieve a balance between accuracy, latency, and complexity.
 
-3. **Cosmo: Contrastive Fusion Learning with Small Data for Multimodal Human Activity Recognition**
-   - **Link:** [ACM Digital Library](https://dl.acm.org/doi/abs/10.1145/3495243.3560519)
-   - **Main Points:**
-     - Introduces Cosmo, a system for contrastive fusion learning with small data.
-     - Suggests that this approach can be applied to multimodal human activity recognition tasks.
+3. **CNN-based Sensor Fusion Techniques for Multimodal Human Activity Recognition**
+   - **Link:** [ACM Digital Library](https://dl.acm.org/doi/abs/10.1145/3123021.3123046)
+   - This paper discusses the use of Convolutional Neural Networks (CNNs) for sensor fusion in multimodal human activity recognition. It investigates how different amounts of training data affect the robustness and performance of these models.
 
-4. **Deep Feature Fusion-Based Human Activity Recognition from Multimodal Sensor Data**
-   - **Link:** [IEEE Xplore](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11291292)
-   - **Main Points:**
-     - Presents a multimodal human activity recognition system using the UTD-MHAD dataset.
-     - Incorporates depth and inertial data to improve recognition accuracy.
+4. **Transformer-based Models to Deal with Heterogeneous Environments in Human Activity Recognition**
+   - **Link:** [arXiv](http://arxiv.org/abs/2209.11750v2)
+   - This paper explores the use of Transformer-based models for human activity recognition (HAR) in heterogeneous environments, particularly using data from inertial measurement units on mobile devices. It discusses the potential benefits and challenges of using Transformers compared to traditional CNNs or LSTMs.
 
 ### Main Classification Strategies
 
-The papers highlight several key strategies in classification for multimodal human activity recognition:
+The papers highlight several key classification strategies:
 
-1. **Multimodal Data Fusion**: This involves combining data from multiple sensors (e.g., wearable devices, cameras) to enhance the robustness and accuracy of activity recognition.
-2. **Contrastive Learning**: Techniques like Cosmo leverage contrastive learning methods to improve performance with limited data by focusing on distinguishing between different classes.
-3. **Deep Feature Fusion**: This approach uses deep learning models to fuse features from multiple modalities, such as depth and inertial sensors, to achieve better recognition accuracy.
+- **Sensor Fusion Techniques:** Many studies employ sensor fusion techniques to combine data from multiple modalities (e.g., accelerometer, gyroscope, magnetometer) for more accurate activity recognition. For instance, the paper on "CNN-based Sensor Fusion Techniques" discusses how CNNs can be used effectively in this context.
 
-These strategies collectively aim to address the challenges of multimodal human activity recognition in various applications, including healthcare, smart surveillance, and human-computer interaction.
+- **Deep Learning Models:** Deep learning models such as Convolutional Neural Networks (CNNs), Long Short-Term Memory networks (LSTMs), and Transformers are widely used for their ability to handle complex multimodal data. The paper on "Transformer-based Models" specifically discusses the use of Transformers, which have shown promise in dealing with heterogeneous environments.
+
+- **Optimization of Sensor Selection:** There is a focus on optimizing sensor selection and data modalities to achieve real-time performance while maintaining accuracy. This is particularly important for applications like exoskeletons where timely response is crucial.
+
+- **Evaluation of Training Data Impact:** Studies also evaluate the impact of varying amounts of training data on model robustness, as seen in "CNN-based Sensor Fusion Techniques."
+
+These strategies collectively aim to improve the accuracy and real-time performance of human activity recognition systems using multimodal sensor fusion.
 ```
 
 ## Some links

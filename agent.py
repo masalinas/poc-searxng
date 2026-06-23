@@ -47,7 +47,7 @@ def academic_search(query: str) -> str:
             f"Published: {published}\n"
             f"Score:     {score_str}\n"
             f"Category:  {category}\n"
-            f"Snippet:   {r.get('content', 'No snippet')[:300]}"
+            f"Snippet:   {r.get('content', 'No snippet')[:200]}"
         )
         formatted.append(entry)
 
@@ -78,22 +78,17 @@ query_task = (
 
 print("--- Lanzando agente ---")
 
-for step in agent.stream(
+for chunk in agent.stream(
     {"messages": [{"role": "user", "content": query_task}]},
-    stream_mode="updates"
+    stream_mode="messages",   # ← stream token a token
 ):
-    node = list(step.keys())[0]
-    msgs = step[node].get("messages", [])
-    for msg in msgs:
-        msg_type = type(msg).__name__
-        if hasattr(msg, "tool_calls") and msg.tool_calls:
-            print(f"\n[{node}] {msg_type} → tool_call: {msg.tool_calls[0]['name']}({msg.tool_calls[0]['args']})")
-        elif msg_type == "ToolMessage":
-            print(f"[{node}] {msg_type} → tool executed ✓")
-        elif msg_type == "AIMessage" and msg.content:
-            # Solo imprimimos preview si NO es el mensaje final. El mensaje final lo guardamos completo
-            final_content = msg.content
-            print(f"[{node}] {msg_type} → synthesizing...")
+    msg, metadata = chunk
+    # Solo imprimir tokens del nodo "agent", no del nodo "tools"
+    if (
+        metadata.get("langgraph_node") == "agent"
+        and hasattr(msg, "content")
+        and msg.content
+    ):
+        print(msg.content, end="", flush=True)
 
-print("\n--- Respuesta Final ---")
-print(final_content)
+print()
